@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/common::head"></head>
+<body>
+<header th:replace="fragments/common::header"></header>
+
+<div class="container">
+  <h2 class="text-center text-white">Add Team</h2>
+  <form  th:method="post" th:action="@{/teams/add}" th:object="${teamAddModel}"
+         class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+    <div class="form-group">
+      <label for="firstName" class="text-white font-weight-bold">Enter a team</label>
+      <input id="firstName" name="firstName" type="text" min="2" max="50"
+             class="form-control"
+             th:value="*{firstName}"
+             placeholder="First team name"/>
+      <p th:if="${#fields.hasErrors('firstName')}" class="errors alert alert-danger">
+        Cannot be null.
+      </p>
+    </div>
+    <div class="form-group">
+      <label for="secondName" class="text-white font-weight-bold">Enter a team</label>
+      <input id="secondName" name="secondName" type="text" min="2" max="50"
+             class="form-control"
+             th:value="*{secondName}"
+             placeholder="Second team name"/>
+      <p th:if="${#fields.hasErrors('secondName')}" class="errors alert alert-danger">
+        Cannot be null.
+      </p>
+    </div>
+    <p class="errors alert alert-danger" th:if="${bad_credentials}">
+      Some of the teams already exist.
+    </p>
+    <div class="row">
+      <div class="col col-md-4">
+        <div class="button-holder d-flex">
+          <input type="submit" class="btn btn-info btn-lg" value="Add Teams"/>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div>
+  <footer th:replace="fragments/common::footer"></footer>
+</div>
+</body>
+</html>

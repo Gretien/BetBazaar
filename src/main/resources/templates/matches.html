@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<header th:replace="fragments/common::header"></header>
+
+
+<div class="container">
+    <h2 class="text-center text-white m-3">All Matches</h2>
+    <div class="row">
+        <div class="col">
+            <div class="bg-dark rounded m-auto" style="height: 68.5vh; overflow: auto; width: 560px">
+                <h2 class="text-white">Matches for today:</h2>
+                <th:block th:each="match : ${matches}">
+                    <br>
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a th:text="${match.home.name}"></a>
+                                    </td>
+                                    <td>
+                                        <a th:text="${match.away.name}"></a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-light" th:text="${match.homeOdd}"
+                                           th:href="@{/matches/bet/add/{odd}(odd=*{match.homeOdd})}"></a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-light" th:text="${match.drawOdd}"
+                                           th:href="@{/matches/bet/add/{odd}(odd=*{match.drawOdd})}"></a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-light" th:text="${match.awayOdd}"
+                                           th:href="@{/matches/bet/add/{odd}(odd=*{match.awayOdd})}"></a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    </ul>
+                </th:block>
+            </div>
+        </div>
+        <div class="col">
+            <div class="bg-dark rounded m-auto" style="height: 68.5vh; overflow: auto; width: 560px">
+                <h2 class="text-white">Your bet:</h2>
+                <th:block th:each="bet : ${bets}">
+                    <br>
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a th:text="${bet.name}"></a>
+                                    </td>
+                                    <td>
+                                        <a th:text="${bet.odd}"></a>
+                                    </td>
+                                    <td style="width: 15%">
+                                        <a class="btn-danger btn"
+                                           th:href="@{/matches/bet/remove/{name}(name=*{bet.name})}">Remove</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    </ul>
+                </th:block>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <form th:method="post"
+              th:action="@{/matches}" th:object="${betCreator}" class="bg-dark rounded m-auto"
+              style="height: 30.5vh; overflow: auto; width: 560px">
+            <div class="form-group">
+                <label for="price" class="text-white font-weight-bold">Place a bet</label>
+                <input id="price" name="price" th:value="*{price}" type="text" min="2" max="40"
+                       class="form-control"
+                       placeholder="Price"/>
+                <p th:if="${nullValue}" class="errors alert alert-danger">
+                    Cannot be null.
+                </p>
+                <p th:if="${noMatches}" class="errors alert alert-danger">
+                    Pick at least one match.
+                </p>
+                <p class="errors alert alert-danger" th:if="${bad_credentials}">
+                    Not enough balance to place the bet.
+                </p>
+            </div>
+            <div class="row">
+                <div class="col col-md-4">
+                    <div class="button-holder d-flex">
+                        <input type="submit" class="btn btn-info btn-lg" value="Bet"/>
+                    </div>
+                </div>
+                <div class="col col-md-4">
+                    <label class="text-white font-weight-bold">Total odds:
+                        <th:block th:text="${totalOdds}"></th:block>
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <footer th:replace="fragments/common::footer"></footer>
+</div>
+
+</body>
+</html>

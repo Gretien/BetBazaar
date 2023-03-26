@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/common::head"></head>
+<body>
+<header th:replace="fragments/common::header"></header>
+
+<div class="container">
+    <h2 class="text-center text-white">All Bets</h2>
+    <div class="bg-dark rounded m-auto" style="height: 68.5vh; overflow: auto">
+        <th:block th:each="bet : ${bets}">
+            <br>
+            <ul class="list-group list-group-horizontal text-dark">
+                <li class="list-group-item">
+                    <table>
+                        <tr>
+                            <td>
+                                <a th:text="|${bet.numberOfBet}.|"></a>
+                            </td>
+                            <td style="width: 15%">
+                                <a th:text="|Stacked: ${bet.price}|"></a>
+                            </td>
+                            <td>
+                                <a th:text="|Winning: ${bet.winningMoney}|"></a>
+                            </td>
+
+                            <td style="width: 15%">
+                                <a class="btn-danger btn"
+                                   th:href="@{/bets/details/{id}(id=*{bet.id})}">Details</a>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
+        </th:block>
+    </div>
+</div>
+<div>
+    <footer th:replace="fragments/common::footer"></footer>
+</div>
+</body>
+</html>

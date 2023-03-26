@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/common::head"></head>
+<body>
+<header th:replace="fragments/common::header"></header>
+
+<div class="container">
+    <h2 class="text-center text-white">All Posts</h2>
+    <div class="bg-dark rounded m-auto" style="height: 68.5vh; overflow: auto">
+        <th:block th:each="post : ${posts}">
+            <br>
+            <ul class="list-group list-group-horizontal text-dark">
+                <li class="list-group-item">
+                    <table>
+                        <tr>
+                            <td style="width: 15%">
+                                <a th:text="|${post.username}:|"></a>
+                            </td>
+                            <td>
+                                <a th:text="${post.text}"></a>
+                            </td>
+
+                            <td th:if="${username}==${post.username}" style="width: 15%">
+                                <a class="btn-danger btn"
+                                   th:href="@{/posts/remove/{id}(id=*{post.id})}">Remove</a>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
+        </th:block>
+    </div>
+</div>
+<div>
+    <footer th:replace="fragments/common::footer"></footer>
+</div>
+</body>
+</html>

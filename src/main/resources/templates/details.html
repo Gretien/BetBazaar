@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/common::head"></head>
+<body>
+<header th:replace="fragments/common::header"></header>
+
+<div class="container">
+    <h2 class="text-center text-white">Bet</h2>
+    <form th:action="@{/bets/details/{id}}"
+          th:method="POST">
+    <div class="bg-dark rounded m-auto" style="height: 68.5vh; overflow: auto">
+        <th:block th:each="match : ${matches}">
+            <br>
+            <ul class="list-group list-group-horizontal text-dark">
+                <li class="list-group-item">
+                    <table>
+                        <tr>
+                            <td style="width: 40%">
+                                <a th:text="|${match.home.name} - ${match.away.name}|"></a>
+                            </td>
+                            <td>
+                                <a th:text="|Prediction: ${match.result.get(0).prediction}|"></a>
+                            </td>
+                            <td>
+                                <a th:text="|${match.result.get(0).homeGoals} : ${match.result.get(0).awayGoals}|"></a>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
+        </th:block>
+        <div class="row">
+            <div class="col col-md-4">
+                <div class="button-holder d-flex">
+                    <input type="submit" class="btn btn-info btn-lg" value="Back"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+<div>
+    <footer th:replace="fragments/common::footer"></footer>
+</div>
+</body>
+</html>

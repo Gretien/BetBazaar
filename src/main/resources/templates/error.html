@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<header th:replace="fragments/common::header"></header>
+
+
+<div class="container">
+    <section id="error-type">
+        <h5 class="text-white col-md text-center">You are trying to access unavailable data.</h5>
+    </section>
+    <div class="text-center p-lg-3">
+        <a th:href="@{/}" class="btn btn-info">Go Back To Home</a>
+    </div>
+</div>
+
+<div>
+    <footer th:replace="fragments/common::footer"></footer>
+</div>
+
+</body>
+</html>

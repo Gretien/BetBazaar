@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/common::head"></head>
+<body>
+<header th:replace="fragments/common::header"></header>
+
+<div class="container" style="overflow: auto; width: 540px">
+    <h2 class="text-center text-white">Profile</h2>
+        <div class="bg-dark rounded m-auto" th:object="${user}" style="height: 68.5vh; overflow: auto">
+            <div class="text-center"><img src="/img/profile.jpg" width="100" class="rounded-circle"></div>
+            <div class="text-center mt-3">
+
+                <span class="bg-secondary p-1 px-4 rounded text-white" >First name</span>
+                <h5 class="mt-2 mb-1 text-white" th:text="*{firstName}"></h5>
+                <span class="bg-secondary p-1 px-4 rounded text-white" >Last name</span>
+                <h5 class="mt-2 mb-1 text-white" th:text="*{lastName}"></h5>
+                <span class="bg-secondary p-1 px-4 rounded text-white" >Age</span>
+                <h5 class="mt-2 mb-1 text-white" th:text="*{age}"></h5>
+                <span class="bg-secondary p-1 px-4 rounded text-white" >Profit</span>
+                <h5 class="mt-2 mb-1 text-white" th:text="${profit}"></h5>
+            </div>
+        </div>
+</div>
+<div>
+    <footer th:replace="fragments/common::footer"></footer>
+</div>
+</body>
+</html>
