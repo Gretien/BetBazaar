@@ -8,6 +8,7 @@ import com.example.demo.repositories.ResultRepository;
 import com.example.demo.services.MatchService;
 import com.example.demo.services.ResultService;
 import com.example.demo.services.TeamService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class ResultServiceImpl implements ResultService {
         int max = 5;
         int homeGoals = random.nextInt((max - min) + 1) + min;
         int awayGoals = random.nextInt((max - min) + 1) + min;
-        String winner="";
+        String winner;
         if(homeGoals>awayGoals){
             winner = "Home";
         }else if(homeGoals==awayGoals){
@@ -62,7 +63,6 @@ public class ResultServiceImpl implements ResultService {
         }else {
             winner = "Away";
         }
-        Result result = new Result(homeGoals,awayGoals,winner,prediction,List.of(matchToSave));
-        return result;
+        return new Result(homeGoals,awayGoals,winner,prediction,List.of(matchToSave));
     }
 }

@@ -22,8 +22,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RoleServiceImplTest {
@@ -43,29 +42,27 @@ public class RoleServiceImplTest {
 
     @Test
     public void testInit() {
-        // Test that conditions are saved when there are no roles in the database
+
         when(roleRepository.count()).thenReturn(0L);
 
-        List<Role> roles = Arrays.stream(RoleType.values())
-                .map(type -> Role.builder().roleType(type).build())
-                .collect(Collectors.toList());
-        List<RoleModel> roleModels = Arrays.stream(RoleType.values())
+        RoleType[] roleTypes = RoleType.values();
+        List<RoleModel> roleModels = Arrays.stream(roleTypes)
                 .map(type -> RoleModel.builder().roleType(type.name()).build())
                 .collect(Collectors.toList());
-        when(modelMapper.map(any(RoleModel.class), eq(Role.class))).thenReturn(new Role());
-        when(roleRepository.saveAllAndFlush(anyList())).thenReturn(roles);
+
+        List<Role> expectedRoles = roleModels.stream()
+                .map(roleModel -> modelMapper.map(roleModel, Role.class))
+                .collect(Collectors.toList());
 
         roleService.init();
 
-        verify(roleRepository).saveAllAndFlush(roleArgumentCaptor.capture());
-        List<Role> roleList = roleArgumentCaptor.getValue();
-        Assertions.assertEquals(roles.size(),roleList.size());
-        Assertions.assertEquals(roles.get(0).getRoleType().name(),roleList.get(0).getRoleType().name());
+        verify(roleRepository, times(1)).count();
+        verify(roleRepository, times(1)).saveAllAndFlush(expectedRoles);
     }
 
     @Test
     public void testFindByName() {
-        // Test that findByName returns the correct RoleModel
+
         Role role = new Role();
         role.setRoleType(RoleType.ADMIN);
         when(roleRepository.findByRoleType(RoleType.ADMIN)).thenReturn(role);
@@ -81,7 +78,7 @@ public class RoleServiceImplTest {
 
     @Test
     public void testSetToUser() {
-        // Test that setToUser returns the correct RoleModel
+
         Role role = new Role();
         role.setRoleType(RoleType.USER);
         when(roleRepository.findByRoleType(RoleType.USER)).thenReturn(role);

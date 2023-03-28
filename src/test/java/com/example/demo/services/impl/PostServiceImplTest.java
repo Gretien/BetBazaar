@@ -47,7 +47,7 @@ public class PostServiceImplTest {
 
     @Test
     void testAddPost() {
-        // given
+
         String username = "testuser";
         PostAddModel postAddModel = new PostAddModel();
         postAddModel.setText("test post text");
@@ -56,23 +56,20 @@ public class PostServiceImplTest {
         Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
         Mockito.when(postRepository.saveAndFlush(Mockito.any())).thenReturn(new Post());
 
-        // when
         postService.addPost(postAddModel, username);
 
-        // then
         Mockito.verify(userRepository).findByUsername(username);
         Mockito.verify(postRepository).saveAndFlush(Mockito.any(Post.class));
     }
 
     @Test
     void testAddPostWithInvalidUsername() {
-        // given
+
         String username = "testuser";
         PostAddModel postAddModel = new PostAddModel();
         postAddModel.setText("test post text");
         Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        // then
         assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(() -> {
             postService.addPost(postAddModel, username);
         });
@@ -80,7 +77,7 @@ public class PostServiceImplTest {
 
     @Test
     void testFindAll() {
-        // given
+
         User user1 = new User();
         user1.setUsername("user1");
         User user2 = new User();
@@ -99,10 +96,8 @@ public class PostServiceImplTest {
         view2.setUsername(user2.getUsername());
 
 
-        // when
         List<PostWithUsernameView> result = postService.findAll();
 
-        // then
         Assertions.assertEquals(2,result.size());
         Assertions.assertEquals(posts.get(0).getText(),result.get(0).getText());
         Assertions.assertEquals(posts.get(1).getText(),result.get(1).getText());
@@ -110,13 +105,11 @@ public class PostServiceImplTest {
 
     @Test
     void testRemovePostById() {
-        // given
+
         String postId = "testid";
 
-        // when
         postService.removePostById(postId);
 
-        // then
         Mockito.verify(postRepository).deleteById(postId);
     }
 
