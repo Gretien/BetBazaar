@@ -26,4 +26,6 @@ public interface UserService {
     List<User> findAll();
 
     void dailyBonus(User user);
+
+    boolean changeUsername(String username, UserModel userModel);
 }

@@ -13,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -133,6 +134,28 @@ public class UserServiceImpl implements UserService {
     public void dailyBonus(User user) {
         user.setBalance(user.getBalance().add(BigDecimal.valueOf(10)));
         this.userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public boolean changeUsername(String username,UserModel userModel) {
+        if(this.userRepository.findByUsername(username).isPresent()||username.trim().isEmpty()||username.length()<3){
+            return false;
+        }
+        User userToChange = this.modelMapper.map(userModel, User.class);
+        userToChange.setUsername(username);
+        this.userRepository.saveAndFlush(userToChange);
+        SecurityContextHolder.getContext().setAuthentication(this.getAuthenticationToken(username));
+        return true;
+    }
+
+    private Authentication getAuthenticationToken(String username) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        return new UsernamePasswordAuthenticationToken(
+                userDetails,
+                userDetails.getPassword(),
+                userDetails.getAuthorities()
+        );
     }
 
 

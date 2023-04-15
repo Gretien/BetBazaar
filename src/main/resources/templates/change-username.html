@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/common::head"></head>
+<body>
+<header th:replace="fragments/common::header"></header>
+
+<div class="container">
+    <h2 class="text-center text-white">Change Username</h2>
+    <form th:method="post" th:action="@{/change/username}"
+          class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+        <div class="form-group">
+            <label for="text" class="text-white font-weight-bold">Write a new username</label>
+            <input id="text" name="username" type="text" min="2" max="50"
+                   class="form-control"
+                   placeholder="Username"/>
+            <p th:if="${bad_credentials}" class="errors alert alert-danger">
+                This username already exist or is empty.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col col-md-4">
+                <div class="button-holder d-flex">
+                    <input type="submit" class="btn btn-info btn-lg" value="Edit"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div>
+    <footer th:replace="fragments/common::footer"></footer>
+</div>
+</body>
+</html>

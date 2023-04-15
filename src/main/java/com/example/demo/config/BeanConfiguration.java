@@ -35,13 +35,13 @@ public class BeanConfiguration {
 
     @Bean
     @SessionScope
-    public AddBetModel addBetModel(){
+    public AddBetModel addBetModel() {
         return new AddBetModel();
     }
 
     @Bean
     @SessionScope
-    public List<AddBetModel> addBetModels(){
+    public List<AddBetModel> addBetModels() {
         return new ArrayList<>();
     }
 
@@ -50,17 +50,17 @@ public class BeanConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            SecurityContextRepository securityContextRepository) throws Exception {
         http.
-                        authorizeHttpRequests().
-                        requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll().
-                        requestMatchers("/**", "/users/login", "/users/register", "/users/login-error").permitAll().
-                        requestMatchers("/teams/add").hasRole(RoleType.ADMIN.name()).
+                authorizeHttpRequests().
+                requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll().
+                requestMatchers("/**", "/users/login", "/users/register", "/users/login-error").permitAll().
+                requestMatchers("/teams/add").hasRole(RoleType.ADMIN.name()).
                 anyRequest().authenticated().
                 and().
-                        formLogin().
+                formLogin().
                 loginPage("/users/login").
-                        usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY).
+                usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY).
                 passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY).
-                        defaultSuccessUrl("/",true).
+                defaultSuccessUrl("/", true).
                 failureForwardUrl("/users/login-error").
                 and().logout().
                 logoutUrl("/users/logout").

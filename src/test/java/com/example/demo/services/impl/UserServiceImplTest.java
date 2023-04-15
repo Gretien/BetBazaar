@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -35,10 +36,7 @@ import org.springframework.security.web.context.DelegatingSecurityContextReposit
 import org.springframework.security.web.context.SecurityContextRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 
@@ -65,10 +63,16 @@ public class UserServiceImplTest {
     private UserDetailsService userDetailsService;
 
     @Mock
+    private UserDetails userDetails;
+
+    @Mock
     private ApplicationUserDetailsService applicationUserDetailsService;
 
     @Captor
     private ArgumentCaptor<User> userArgumentCaptor;
+
+    @Mock
+    private AuthenticationManager authenticationManager;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -145,8 +149,9 @@ public class UserServiceImplTest {
         when(roleService.setToUser()).thenReturn(roleModel);
         when(modelMapper.map(any(UserModel.class),eq(User.class))).thenReturn(user);
         when(passwordEncoder.encode(any(String.class))).thenReturn("password");
-        UserDetails userDetails = new AppUserDetails(userRegister.getUsername(),userRegister.getPassword(),new ArrayList<>());
-        when(userDetailsService.loadUserByUsername(userRegister.getUsername())).thenReturn(userDetails);
+        UserDetailsService userDetailsService = mock(UserDetailsService.class);
+        UserDetails userDetails = new AppUserDetails("testuser", "password", new ArrayList<>());
+        when(userDetailsService.loadUserByUsername("testuser")).thenReturn(userDetails);
 
 
         userService.register(userRegister, authentication -> {});
@@ -277,5 +282,32 @@ public class UserServiceImplTest {
 
         Assertions.assertEquals(BigDecimal.valueOf(110), user.getBalance());
         verify(userRepository, times(1)).saveAndFlush(user);
+    }
+
+    @Test
+    public void testChangeUsername() {
+        String username = "newUsername";
+        UserModel userModel = new UserModel();
+        User user = new User();
+        Authentication authentication = mock(Authentication.class);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+        when(userDetailsService.loadUserByUsername("newUsername")).thenReturn(userDetails);
+        when(userDetails.getPassword()).thenReturn("password");
+        when(userDetails.getAuthorities()).thenReturn(Collections.emptyList());
+        when(modelMapper.map(userModel, User.class)).thenReturn(user);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        boolean result = userService.changeUsername(username, userModel);
+
+
+        Assertions.assertTrue(result);
+        verify(userRepository).findByUsername(username);
+        verify(userRepository).saveAndFlush(userArgumentCaptor.capture());
+        Assertions.assertEquals(username, userArgumentCaptor.getValue().getUsername());
+        verify(modelMapper).map(userModel, User.class);
+        verify(userDetailsService).loadUserByUsername(username);
+        verify(userDetails).getAuthorities();
+        verify(userDetails).getPassword();
     }
 }
